@@ -51,7 +51,7 @@
             </p>
         </div>
 
-        <main id="app-container" class="w-full max-w-5xl">
+        <main id="app-container" class="w-full max-w-5xl mt-8">
             <!-- View 1: Style Selector -->
             <div id="style-selector-view" class="view active">
                 <div class="text-center">
@@ -246,6 +246,15 @@
             };
             
             const handleGenerate = async () => {
+                // WARNING: Hardcoding your API key here is NOT secure for a public website.
+                // Anyone can view your source code and steal your key.
+                const apiKey = "YOUR_API_KEY_HERE"; 
+
+                if (apiKey === "YOUR_API_KEY_HERE") {
+                    showError("API Key not set. Please add your key in the script section.");
+                    return;
+                }
+
                 if (!uploadedImage?.base64 || !selectedStyle) {
                     showError('Please upload an image and select a style.');
                     return;
@@ -263,7 +272,6 @@
                     generationConfig: { responseModalities: ['IMAGE'] },
                 };
 
-                const apiKey = ""; // API key is injected by the environment
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${apiKey}`;
 
                 let response;
@@ -309,7 +317,7 @@
                         document.getElementById('result-transformed-image').src = generatedImage;
                         switchView('result');
                     } else {
-                         const errorText = result.error?.message || 'No image data found in API response. The content may have been blocked.';
+                         const errorText = result.error?.message || 'No image data found in API response. The content may have been blocked or the API key is invalid.';
                          throw new Error(errorText);
                     }
                 } catch (err) {
